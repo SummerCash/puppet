@@ -3,7 +3,6 @@ package cli
 
 import (
 	"os"
-	"github.com/SummerCash/puppet/common"
 
 	"github.com/urfave/cli"
 
@@ -27,27 +26,11 @@ func NewCLI() *CLI {
 	app.Version = "v0.1.0" // Set version
 	app.EnableBashCompletion = true // Enable auto-completion
 
-	app.Flags = []cli.Flag {
-		cli.StringFlag{
-			Name: "data-dir, data", // Set name
-			Value: common.DataDir, // Set value
-			Usage: "path to store network files in", // Set usage
-			Destination: &common.DataDir, // Set destination
-		},
-		cli.StringFlag{
-			Name: "network-name, network", // Set name
-			Value: "main_net", // Set value
-			Usage: "name to register network as", // Set usage
-		},
-		cli.StringFlag{
-			Name: "config-path, config", // Set name
-			Value: "", // Set value
-			Usage: "existing network configuration to bootstrap network creation from", // Set usage
-		},
-		cli.StringFlag{
-			Name: "genesis-path, genesis", // Set name
-			Value: "", // Set value
-			Usage: "file to bootstrap network configuration creation from; must contain supply, network id, and inflation rate definitions", // Set usage
+	app.Flags = []cli.Flag{
+		cli.IntFlag{
+			Name: "node-port, port", // Set name
+			Value: 3030, // Set value
+			Usage: "port to use for p2p communications (if applicable)", // Set usage
 		},
 	}
 
