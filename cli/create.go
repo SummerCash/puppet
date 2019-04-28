@@ -153,13 +153,19 @@ func constructNetwork(c *cli.Context, dataPath string) error {
 		}
 	}
 
+	genesisAccount, err := accounts.ReadAccountFromMemory(genesisAddress) // Read genesis account from persistent memory
+
+	if err != nil { // Check for errors
+		return err // Return found error
+	}
+
 	err = chain.WriteToMemory() // Write chain to persistent memory
 
 	if err != nil { // Check for errors
 		return err // Return found error
 	}
 
-	_, err = chain.MakeGenesis(config) // Make genesis
+	_, err = chain.MakeGenesis(config, genesisAccount.PrivateKey) // Make genesis
 
 	if err != nil { // Check for errors
 		return err // Return found error
@@ -346,11 +352,22 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 	}
 
 	if shouldEnableFaucet { // Check should enable faucet
-		_, err = makeFaucetAccount(networkID) // Initialize faucet account
+		faucet, err := makeFaucetAccount(networkID) // Initialize faucet account
 
 		if err != nil { // Check for errors
 			return nil, []summercashCommon.Address{}, err // Return found error
 		}
+
+		amountShouldGiftFaucetString, err := app.InputConfig.Ask("How many coins would you like to allocate to the faucet?", &input.Options{
+			Default:   "100", // Set default
+			Required:  true,  // Make required
+			HideOrder: true,  // Hide extra question
+		})
+
+		amountShouldGiftFaucet, _, _ := big.ParseFloat(amountShouldGiftFaucetString, 10, 18, big.ToNearestEven) // Parse float
+
+		alloc[faucet.Address.String()] = amountShouldGiftFaucet // Set amount to gift faucet
+		allocAddresses = append(allocAddresses, faucet.Address) // Append faucet address
 	}
 
 	for x := 0; true; x++ { // Do until break

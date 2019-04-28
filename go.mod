@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.37.4 // indirect
 	github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9 // indirect
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
-	github.com/SummerCash/go-summercash v0.6.3
+	github.com/SummerCash/go-summercash v0.6.4
 	github.com/SummerCash/summercash-wallet-server v0.5.8
 	github.com/boltdb/bolt v1.3.1
 	github.com/btcsuite/goleveldb v1.0.0 // indirect
@@ -21,6 +21,7 @@ require (
 	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/kkdai/bstream v0.0.0-20181106074824-b3251f7901ec // indirect
 	github.com/kr/pty v1.1.4 // indirect
+	github.com/libp2p/go-libp2p v0.0.19 // indirect
 	github.com/miekg/dns v1.1.8 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/tcnksm/go-input v0.0.0-20180404061846-548a7d7a8ee8
