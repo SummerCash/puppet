@@ -28,9 +28,11 @@ func GetDefaultDataPath() string {
 			panic(err) // Panic
 		}
 
+		puppetPath, _ := filepath.Abs(filepath.FromSlash(fmt.Sprintf("%s/puppet", user.HomeDir))) // Set data path
+
 		path, _ = filepath.Abs(filepath.FromSlash(fmt.Sprintf("%s/puppet/data", user.HomeDir))) // Set data path
 
-		err = common.CreateDirIfDoesNotExist(path) // Create puppet dir
+		err = common.CreateDirIfDoesNotExist(puppetPath) // Create puppet dir
 
 		if err != nil { // Check for errors
 			panic(err) // Panic
