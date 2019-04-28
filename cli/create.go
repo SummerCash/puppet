@@ -141,8 +141,16 @@ func constructNetwork(c *cli.Context, dataPath string) error {
 
 	chain, err := types.NewChain(genesisAddress) // Initialize chain
 
-	if err != nil && !strings.Contains(err.Error(), "chain already exists") { // Check for errors
-		return err // Return found error
+	if err != nil { // Check for errors
+		if strings.Contains(err.Error(), "chain already exists") { // Check chain already exists
+			chain, err = types.ReadChainFromMemory(genesisAddress) // Read chain, instead of creating one
+
+			if err != nil { // Check for errors
+				return err // Return found error
+			}
+		} else {
+			return err // Return found error
+		}
 	}
 
 	err = chain.WriteToMemory() // Write chain to persistent memory
@@ -152,6 +160,12 @@ func constructNetwork(c *cli.Context, dataPath string) error {
 	}
 
 	_, err = chain.MakeGenesis(config) // Make genesis
+
+	if err != nil { // Check for errors
+		return err // Return found error
+	}
+
+	err = chain.WriteToMemory() // Write chain to persistent memory after making genesis block
 
 	if err != nil { // Check for errors
 		return err // Return found error
