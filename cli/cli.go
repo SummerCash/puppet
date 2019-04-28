@@ -11,7 +11,7 @@ import (
 
 // CLI defines a command-line-interface.
 type CLI struct {
-	App *cli.App // CLI app
+	App         *cli.App  // CLI app
 	InputConfig *input.UI // Input config
 }
 
@@ -21,15 +21,15 @@ type CLI struct {
 func NewCLI() *CLI {
 	app := cli.NewApp() // Initialize CLI app
 
-	app.Name = "puppet" // Set name
+	app.Name = "puppet"                                                                   // Set name
 	app.Usage = "a visual CLI for managing, creating, and analyzing SummerCash networks." // Set description
-	app.Version = "v0.1.0" // Set version
-	app.EnableBashCompletion = true // Enable auto-completion
+	app.Version = "v0.1.0"                                                                // Set version
+	app.EnableBashCompletion = true                                                       // Enable auto-completion
 
 	app.Flags = []cli.Flag{
 		cli.IntFlag{
-			Name: "node-port, port", // Set name
-			Value: 3030, // Set value
+			Name:  "node-port, port",                                    // Set name
+			Value: 3030,                                                 // Set value
 			Usage: "port to use for p2p communications (if applicable)", // Set usage
 		},
 	}
@@ -38,7 +38,7 @@ func NewCLI() *CLI {
 		App: app, // Set app
 		InputConfig: &input.UI{
 			Writer: os.Stdout, // Set output
-			Reader: os.Stdin, // Set input
+			Reader: os.Stdin,  // Set input
 		}, // Set config
 	} // Return CLI
 }
