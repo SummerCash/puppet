@@ -364,6 +364,10 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 			HideOrder: true,  // Hide extra question
 		})
 
+		if amountShouldGiftFaucetString == "\r" || amountShouldGiftFaucetString == "" { // Check no value set
+			amountShouldGiftFaucetString = "100" // Set to default
+		}
+
 		amountShouldGiftFaucet, _, _ := big.ParseFloat(amountShouldGiftFaucetString, 10, 18, big.ToNearestEven) // Parse float
 
 		alloc[faucet.Address.String()] = amountShouldGiftFaucet // Set amount to gift faucet
