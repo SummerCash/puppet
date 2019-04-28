@@ -2,6 +2,10 @@
 package cli
 
 import (
+	"bytes"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"encoding/json"
 	"github.com/SummerCash/puppet/common"
 	"github.com/tcnksm/go-input"
@@ -179,20 +183,6 @@ func (app *CLI) parseGenesisFile(genesisPath string) (*config.ChainConfig, error
 
 	chainID := summercashCommon.Hash{} // Init hash buffer
 
-	if readJSON["alloc"] != nil { // Check has alloc
-		alloc, allocAddresses, err = parseAlloc(readJSON) // Parse alloc
-
-		if err != nil { // Check for errors
-			return &config.ChainConfig{}, err // Return error
-		}
-	} else { // User has not specified alloc in genesis
-		alloc, allocAddresses, err = app.requestAlloc() // Request alloc
-
-		if err != nil { // Check for errors
-			return &config.ChainConfig{}, err // Return error
-		}
-	}
-
 	if readJSON["networkID"] != nil { // Check has network ID
 		networkID = uint(readJSON["networkID"].(float64)) // Set network ID
 	} else {
@@ -209,6 +199,20 @@ func (app *CLI) parseGenesisFile(genesisPath string) (*config.ChainConfig, error
 		}
 
 		networkID = uint(networkIDInt) // Convert to uint
+	}
+
+	if readJSON["alloc"] != nil { // Check has alloc
+		alloc, allocAddresses, err = parseAlloc(readJSON) // Parse alloc
+
+		if err != nil { // Check for errors
+			return &config.ChainConfig{}, err // Return error
+		}
+	} else { // User has not specified alloc in genesis
+		alloc, allocAddresses, err = app.requestAlloc(networkID) // Request alloc
+
+		if err != nil { // Check for errors
+			return &config.ChainConfig{}, err // Return error
+		}
 	}
 
 	if readJSON["inflation"] != nil { // Check has inflation rate
@@ -241,15 +245,9 @@ func (app *CLI) parseGenesisFile(genesisPath string) (*config.ChainConfig, error
 	}, nil // Return chain config
 }
 
-func (app *CLI) requestAlloc() (map[string]*big.Float, []summercashCommon.Address, error) {
+func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercashCommon.Address, error) {
 	alloc := make(map[string]*big.Float)           // Init alloc map
 	allocAddresses := []summercashCommon.Address{} // Init alloc address buffer
-
-	genesisAccount, err := accounts.NewAccount() // Initialize genesis account
-
-	if err != nil { // Check for errors
-		return nil, []summercashCommon.Address{}, err // Return found error
-	}
 
 	totalIssuanceString, err := app.InputConfig.Ask("How many coins would you like to issue?", &input.Options{
 		Default:   "21000000", // Set default
@@ -258,6 +256,12 @@ func (app *CLI) requestAlloc() (map[string]*big.Float, []summercashCommon.Addres
 	})
 
 	totalIssuanceBigVal, _, _ := big.ParseFloat(totalIssuanceString, 64, 18, big.ToNearestEven) // Parse total issuance
+
+	genesisAccount, err := newAccount(networkID) // Initialize genesis account
+
+	if err != nil { // Check for errors
+		return nil, []summercashCommon.Address{}, err // Return found error
+	}
 
 	alloc[genesisAccount.Address.String()] = totalIssuanceBigVal    // Set value
 	allocAddresses = append(allocAddresses, genesisAccount.Address) // Append genesis account address
@@ -340,6 +344,37 @@ func parseAlloc(json map[string]interface{}) (map[string]*big.Float, []summercas
 	}
 
 	return alloc, allocAddresses, nil // No error occurred, return nil
+}
+
+// newAccount initializes a new account, along with a chain.
+func newAccount(networkID uint) (*accounts.Account, error) {
+	account := &accounts.Account{
+		Address: summercashCommon.Address{'\r'}, // Set mock address
+	} // Init account buffer
+
+	for bytes.Contains(account.Address.Bytes(), []byte{'\r'}) { // Generate accounts until valid
+		privateKey, err := ecdsa.GenerateKey(elliptic.P521(), rand.Reader) // Generate private key
+
+		if err != nil { // Check for errors
+			return &accounts.Account{}, err // Return error
+		}
+
+		account, err = accounts.AccountFromKey(privateKey) // Generate account from key
+
+		if err != nil { // Check for errors
+			return &accounts.Account{}, err // Return error
+		}
+	}
+
+	chain := &types.Chain{ // Init chain
+		Account:      account.Address,
+		Transactions: []*types.Transaction{},
+		NetworkID:    networkID,
+	}
+
+	(*chain).ID = summercashCommon.NewHash(crypto.Sha3(chain.Bytes())) // Set ID
+
+	return account, chain.WriteToMemory() // Write to memory
 }
 
 /* END INTERNAL METHODS */
