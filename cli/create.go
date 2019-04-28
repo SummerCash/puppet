@@ -330,9 +330,11 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 			HideOrder: true,  // Hide extra question
 		})
 
-		if additionalAddress == "" { // Check no additional address
+		if additionalAddress == "" || additionalAddress == "\r" { // Check no additional address
 			break // Break
 		}
+
+		additionalAddress = strings.Replace(additionalAddress, "\r", "", 1) // Remove \r
 
 		address, err := summercashCommon.StringToAddress(additionalAddress) // Parse string address
 
