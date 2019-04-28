@@ -1,6 +1,6 @@
-# puppet
+# Puppet
 
-Visual CLI for managing, creating, and analyzing SummerCash networks.
+A visual command-line interface for managing, creating, and analyzing SummerCash networks.
 
 ## Installation
 
