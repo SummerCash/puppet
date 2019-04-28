@@ -13,3 +13,6 @@
 
 # VS Code Prefs
 .vscode/
+
+# Runtime Data
+*.pem
