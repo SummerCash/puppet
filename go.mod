@@ -8,6 +8,7 @@ require (
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
 	github.com/SummerCash/go-summercash v0.6.3
 	github.com/SummerCash/summercash-wallet-server v0.5.8
+	github.com/boltdb/bolt v1.3.1
 	github.com/btcsuite/goleveldb v1.0.0 // indirect
 	github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect

@@ -7,16 +7,22 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"github.com/SummerCash/puppet/common"
 	"github.com/tcnksm/go-input"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"math/big"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/boltdb/bolt"
 
 	walletAccounts "github.com/SummerCash/summercash-wallet-server/accounts"
+	walletCrypto "github.com/SummerCash/summercash-wallet-server/crypto"
 
 	"github.com/SummerCash/go-summercash/accounts"
 	summercashCommon "github.com/SummerCash/go-summercash/common"
@@ -304,7 +310,7 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 	}
 
 	if shouldEnableFaucet { // Check should enable faucet
-		_, err = walletAccounts.OpenDB() // Open db, create faucet account
+		_, err = makeFaucetAccount(networkID) // Initialize faucet account
 
 		if err != nil { // Check for errors
 			return nil, []summercashCommon.Address{}, err // Return found error
@@ -378,8 +384,11 @@ func newAccount(networkID uint) (*accounts.Account, error) {
 		Address: summercashCommon.Address{'\r'}, // Set mock address
 	} // Init account buffer
 
+	var privateKey *ecdsa.PrivateKey // Initialize private key buffer
+	var err error                    // Init error buffer
+
 	for bytes.Contains(account.Address.Bytes(), []byte{'\r'}) { // Generate accounts until valid
-		privateKey, err := ecdsa.GenerateKey(elliptic.P521(), rand.Reader) // Generate private key
+		privateKey, err = ecdsa.GenerateKey(elliptic.P521(), rand.Reader) // Generate private key
 
 		if err != nil { // Check for errors
 			return &accounts.Account{}, err // Return error
@@ -392,6 +401,12 @@ func newAccount(networkID uint) (*accounts.Account, error) {
 		}
 	}
 
+	err = account.WriteToMemory() // Write account to persistent memory
+
+	if err != nil { // Check for errors
+		return &accounts.Account{}, err // Return found error
+	}
+
 	chain := &types.Chain{ // Init chain
 		Account:      account.Address,
 		Transactions: []*types.Transaction{},
@@ -401,6 +416,91 @@ func newAccount(networkID uint) (*accounts.Account, error) {
 	(*chain).ID = summercashCommon.NewHash(crypto.Sha3(chain.Bytes())) // Set ID
 
 	return account, chain.WriteToMemory() // Write to memory
+}
+
+// makeFaucetAccount initializes a new account, along with a SummerCash wallet account.
+func makeFaucetAccount(networkID uint) (*walletAccounts.Account, error) {
+	account, err := newAccount(networkID) // Initialize account
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	privateKey, err := ecdsa.GenerateKey(elliptic.P521(), rand.Reader) // Generate private key
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	err = summercashCommon.CreateDirIfDoesNotExist(fmt.Sprintf("%s/faucet/keystore", common.DataDir)) // Create faucet keystore dir
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	keystoreFile, err := os.OpenFile(filepath.FromSlash(fmt.Sprintf("%s/faucet/keystore/privateKey.key", common.DataDir)), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666) // Open keystore dir
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	defer keystoreFile.Close() // Close keystore file
+
+	_, err = keystoreFile.WriteString(privateKey.X.String() + ":" + privateKey.Y.String()) // Write pwd
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	walletAccount := &walletAccounts.Account{
+		Name:         "faucet",                                                                 // Set username
+		PasswordHash: walletCrypto.Salt([]byte(privateKey.X.String() + privateKey.Y.String())), // Set password hash
+		Address:      account.Address,                                                          // Set address
+	} // Initialize wallet account
+
+	err = summercashCommon.CreateDirIfDoesNotExist(filepath.FromSlash(fmt.Sprintf("%s/db", common.DataDir))) // Create db dir
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	database, err := bolt.Open(filepath.FromSlash(fmt.Sprintf("%s/smc_db.db", filepath.FromSlash(fmt.Sprintf("%s/db", common.DataDir)))), 0644, &bolt.Options{Timeout: 5 * time.Second}) // Open DB with timeout
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	db := &walletAccounts.DB{
+		DB: database, // Set DB
+	} // Initialize DB
+
+	err = db.CreateAccountsBucketIfNotExist() // Create accounts bucket
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	err = db.DB.Update(func(tx *bolt.Tx) error {
+		accountsBucket := tx.Bucket([]byte("accounts")) // Get accounts bucket
+
+		if alreadyExists := accountsBucket.Get(crypto.Sha3([]byte("faucet"))); alreadyExists != nil { // Check already exists
+			return walletAccounts.ErrAccountAlreadyExists // Return error
+		}
+
+		return accountsBucket.Put(crypto.Sha3([]byte("faucet")), walletAccount.Bytes()) // Put account
+	}) // Add new account to DB
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	err = db.CloseDB() // Close DB
+
+	if err != nil { // Check for errors
+		return &walletAccounts.Account{}, err // Return found error
+	}
+
+	return walletAccount, nil // No error occurred, return nil.
 }
 
 /* END INTERNAL METHODS */
