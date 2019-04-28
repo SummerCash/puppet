@@ -14,7 +14,7 @@ func main() {
 
 	cli.SetupCreateCommand(app) // Setup create command
 
-	err := app.Run(os.Args) // Initialize CLI app
+	err := app.App.Run(os.Args) // Initialize CLI app
 
 	if err != nil { // Check for errors
 		log.Fatal(err) // Panic

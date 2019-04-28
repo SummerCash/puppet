@@ -2,15 +2,24 @@
 package cli
 
 import (
+	"os"
 	"github.com/SummerCash/puppet/common"
 
 	"github.com/urfave/cli"
+
+	"github.com/tcnksm/go-input"
 )
+
+// CLI defines a command-line-interface.
+type CLI struct {
+	App *cli.App // CLI app
+	InputConfig *input.UI // Input config
+}
 
 /* BEGIN EXPORTED METHODS */
 
-// NewCLIApp initializes a new cli application.
-func NewCLIApp() *cli.App {
+// NewCLI initializes a new cli application.
+func NewCLI() *CLI {
 	app := cli.NewApp() // Initialize CLI app
 
 	app.Name = "puppet" // Set name
@@ -42,7 +51,13 @@ func NewCLIApp() *cli.App {
 		},
 	}
 
-	return app // Return app
+	return &CLI{
+		App: app, // Set app
+		InputConfig: &input.UI{
+			Writer: os.Stdout, // Set output
+			Reader: os.Stdin, // Set input
+		}, // Set config
+	} // Return CLI
 }
 
 /* END EXPORTED METHODS */
