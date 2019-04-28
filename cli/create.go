@@ -169,7 +169,7 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		return err // Return found error
 	}
 
-	color.Green(fmt.Sprintf("You're all good to go! %s Your new SummerCash network has been created in %s. Try running go-summercash to get started.", emoji.Sprint(":clap:"), common.DataDir)) // Log success
+	color.Green(fmt.Sprintf("\nYou're all good to go! %s Your new SummerCash network has been created in %s. Try running go-summercash to get started.", emoji.Sprint(":clap:"), common.DataDir)) // Log success
 
 	summercashCommon.Silent = false // Enable logs
 
@@ -178,11 +178,9 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 
 // constructNetwork constructs a network, assuming all configs have been set.
 func constructNetwork(c *cli.Context, dataPath string) error {
-	w := wow.New(os.Stdout, spin.Get(spin.Dots), "Building your new SummerCash network...\n") // Init logger
+	w := wow.New(os.Stdout, spin.Get(spin.Dots), "Building your new SummerCash network...") // Init logger
 
 	w.Start() // Start spinner
-
-	time.Sleep(2 * time.Second)
 
 	defer w.Stop() // Stop
 
