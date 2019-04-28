@@ -7,20 +7,16 @@ import (
 
 var (
 	// DataDir is the global data directory definition.
-	DataDir = getDefaultDataPath() // Get default data path
+	DataDir = GetDefaultDataPath() // Get default data path
 )
 
 /* BEGIN EXPORTED METHODS */
 
-/* END EXPORTED METHODS */
-
-/* BEGIN INTERNAL METHODS */
-
-// getDefaultDataPath gets the default data directory.
-func getDefaultDataPath() string {
+// GetDefaultDataPath gets the default data directory.
+func GetDefaultDataPath() string {
 	path, _ := filepath.Abs(filepath.FromSlash("./data")) // Get data path
 
 	return path // Return path
 }
 
-/* END INTERNAL METHODS */
+/* END EXPORTED METHODS */
