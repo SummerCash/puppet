@@ -41,6 +41,10 @@ func (app *CLI) SetupSearchCommand() {
 	})
 }
 
+/* END EXPORTED METHODS */
+
+/* BEGIN INTERNAL METHODS */
+
 // searchBlockmesh handles the search command.
 func (app *CLI) searchBlockmesh(c *cli.Context) error {
 	summercashCommon.Silent = true // Silence logsconfigPath
@@ -79,54 +83,68 @@ func (app *CLI) searchBlockmesh(c *cli.Context) error {
 	}
 
 	if len(searchChains) == 0 { // Check no search chains specified
-		shouldGetSearchChains := false // Init buffer
-
-		i.Run(&i.Interact{
-			Questions: []*i.Question{
-				{
-					Quest: i.Quest{
-						Msg: "Would you like to search the entire blockmesh, or multiple chains?",
-						Choices: i.Choices{
-							Alternatives: []i.Choice{
-								{
-									Text:     "blockmesh",
-									Response: false,
-								},
-								{
-									Text:     "chain",
-									Response: true,
-								},
-							},
-						},
-					},
-					Action: func(c i.Context) interface{} {
-						shouldGetSearchChains, err = c.Ans().Bool() // Set should get search chains
-
-						return nil
-					},
-				},
-			},
-		})
+		searchChains, err = app.requestSearchChains(c) // Request search chains
 
 		if err != nil { // Check for errors
 			return err // Return found error
-		}
-
-		if shouldGetSearchChains { // Check must get search chains
-			searchChainsString, err := app.InputConfig.Ask("What chains would you like to search?", &input.Options{
-				Required:  true, // Make optional
-				HideOrder: true, // Hide extra question
-			})
-
-			if err != nil { // Check for errors
-				return err // Return found error
-			}
-
-			searchChains = strings.Split(searchChainsString, ", ") // Split
 		}
 	}
 
 	return nil // No error occurred, return nil
 }
 
-/* END EXPORTED METHODS */
+// requestSearchChains requests the list of search chains from the user.
+func (app *CLI) requestSearchChains(c *cli.Context) ([]string, error) {
+	var searchChains []string // Init search chains buffer
+	var err error             // Init error buffer
+
+	shouldGetSearchChains := false // Init buffer
+
+	i.Run(&i.Interact{
+		Questions: []*i.Question{
+			{
+				Quest: i.Quest{
+					Msg: "Would you like to search the entire blockmesh, or multiple chains?",
+					Choices: i.Choices{
+						Alternatives: []i.Choice{
+							{
+								Text:     "blockmesh",
+								Response: false,
+							},
+							{
+								Text:     "chain",
+								Response: true,
+							},
+						},
+					},
+				},
+				Action: func(c i.Context) interface{} {
+					shouldGetSearchChains, err = c.Ans().Bool() // Set should get search chains
+
+					return nil
+				},
+			},
+		},
+	})
+
+	if err != nil { // Check for errors
+		return []string{}, err // Return found error
+	}
+
+	if shouldGetSearchChains { // Check must get search chains
+		searchChainsString, err := app.InputConfig.Ask("What chains would you like to search?", &input.Options{
+			Required:  true, // Make optional
+			HideOrder: true, // Hide extra question
+		})
+
+		if err != nil { // Check for errors
+			return []string{}, err // Return found error
+		}
+
+		searchChains = strings.Split(searchChainsString, ", ") // Split
+	}
+
+	return searchChains, nil // Return search chains
+}
+
+/* BEGIN INTERNAL METHODS */
