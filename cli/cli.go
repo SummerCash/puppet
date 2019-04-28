@@ -22,6 +22,7 @@ func NewCLIApp() *cli.App {
 			Name: "data-dir", // Set name
 			Value: common.DataDir, // Set value
 			Usage: "path to store network files in", // Set usage
+			Destination: &common.DataDir, // Set destination
 		},
 		cli.StringFlag{
 			Name: "network-name", // Set name
