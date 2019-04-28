@@ -12,6 +12,8 @@ import (
 func main() {
 	app := cli.NewCLIApp() // Initialize CLI app
 
+	cli.SetupCreateCommand(app) // Setup create command
+
 	err := app.Run(os.Args) // Initialize CLI app
 
 	if err != nil { // Check for errors
