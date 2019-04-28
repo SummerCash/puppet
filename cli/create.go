@@ -29,6 +29,12 @@ import (
 	"github.com/SummerCash/go-summercash/config"
 	"github.com/SummerCash/go-summercash/crypto"
 	"github.com/SummerCash/go-summercash/types"
+
+	"github.com/gernest/wow"
+	"github.com/gernest/wow/spin"
+
+	"github.com/fatih/color"
+	"github.com/kyokomi/emoji"
 )
 
 /* BEGIN EXPORTED METHODS */
@@ -94,6 +100,29 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		common.DataDir = dataDir // Set data dir
 	}
 
+	if _, err := os.Stat(common.DataDir); !os.IsNotExist(err) { // Check network already exists
+		yellow := color.New(color.FgYellow).PrintfFunc() // Init yellow
+
+		yellow("It looks like a network already exists in %s. Do you want to continue? (Default is no)", common.DataDir) // Print
+
+		shouldContinue, err := app.InputConfig.Ask("", &input.Options{
+			Default:     "no", // Set default
+			Required:    true, // Make required
+			HideOrder:   true, // Hide extra question
+			HideDefault: true, // Hide default
+		})
+
+		if err != nil { // Check for errors
+			return err // Return found error
+		}
+
+		if shouldContinue == "\r" || shouldContinue == "" { // Check no value set
+			os.Exit(1) // Abort execution
+		} else if shouldContinue == "no" {
+			os.Exit(0) // Stop execution
+		}
+	}
+
 	summercashCommon.DataDir = common.DataDir // Set smc data dir
 
 	if configPath := c.String("config-path"); configPath != "" { // Check has existing configuration file.
@@ -118,6 +147,8 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		return err // Return found error
 	}
 
+	color.Green(fmt.Sprintf("You're all good to go! %s Your new SummerCash network has been created in %s. Try running go-summercash to get started.", emoji.Sprint(":clap:"), common.DataDir)) // Log success
+
 	summercashCommon.Silent = false // Enable logs
 
 	return nil // No error occurred, return nil
@@ -125,6 +156,14 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 
 // constructNetwork constructs a network, assuming all configs have been set.
 func constructNetwork(c *cli.Context, dataPath string) error {
+	w := wow.New(os.Stdout, spin.Get(spin.Dots), "Building your new SummerCash network...\n") // Init logger
+
+	w.Start() // Start spinner
+
+	time.Sleep(2 * time.Second)
+
+	defer w.Stop() // Stop
+
 	configPath := filepath.FromSlash(fmt.Sprintf("%s/config/config.json", dataPath)) // Get config path
 
 	if dataPath == "" { // Check no data path
