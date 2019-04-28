@@ -8,9 +8,6 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"github.com/SummerCash/puppet/common"
-	"github.com/tcnksm/go-input"
-	"github.com/urfave/cli"
 	"io/ioutil"
 	"math/big"
 	"os"
@@ -18,6 +15,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/SummerCash/puppet/common"
+	"github.com/tcnksm/go-input"
+	"github.com/urfave/cli"
 
 	"github.com/boltdb/bolt"
 
@@ -464,7 +465,7 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 			HideOrder: true, // Hide extra question
 		})
 
-		additionalBalanceBigVal, _, _ := big.ParseFloat(additionalBalance, 64, 18, big.ToNearestEven) // Parse balance string val
+		additionalBalanceBigVal, _, _ := big.ParseFloat(additionalBalance, 10, 18, big.ToNearestEven) // Parse balance string val
 
 		alloc[address.String()] = additionalBalanceBigVal // Set val
 		allocAddresses = append(allocAddresses, address)  // Append alloc address
