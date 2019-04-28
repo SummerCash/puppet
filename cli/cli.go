@@ -29,7 +29,7 @@ func NewCLI() *CLI {
 	app.Flags = []cli.Flag{
 		cli.IntFlag{
 			Name:  "node-port, port",                                    // Set name
-			Value: 3030,                                                 // Set value
+			Value: 3033,                                                 // Set value
 			Usage: "port to use for p2p communications (if applicable)", // Set usage
 		},
 	}
