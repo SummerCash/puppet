@@ -19,23 +19,23 @@ func NewCLIApp() *cli.App {
 
 	app.Flags = []cli.Flag {
 		cli.StringFlag{
-			Name: "data-dir", // Set name
+			Name: "data-dir, data", // Set name
 			Value: common.DataDir, // Set value
 			Usage: "path to store network files in", // Set usage
 			Destination: &common.DataDir, // Set destination
 		},
 		cli.StringFlag{
-			Name: "network-name", // Set name
+			Name: "network-name, network", // Set name
 			Value: "main_net", // Set value
 			Usage: "name to register network as", // Set usage
 		},
 		cli.StringFlag{
-			Name: "config-path", // Set name
+			Name: "config-path, config", // Set name
 			Value: "", // Set value
 			Usage: "existing network configuration to bootstrap network creation from", // Set usage
 		},
 		cli.StringFlag{
-			Name: "genesis-path", // Set name
+			Name: "genesis-path, genesis", // Set name
 			Value: "", // Set value
 			Usage: "file to bootstrap network configuration creation from; must contain supply, network id, and inflation rate definitions", // Set usage
 		},
