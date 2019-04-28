@@ -10,9 +10,9 @@ import (
 
 // main is the puppet entry function.
 func main() {
-	app := cli.NewCLIApp() // Initialize CLI app
+	app := cli.NewCLI() // Initialize CLI app
 
-	cli.SetupCreateCommand(app) // Setup create command
+	app.SetupCreateCommand() // Setup create command
 
 	err := app.App.Run(os.Args) // Initialize CLI app
 
