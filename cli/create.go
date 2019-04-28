@@ -286,8 +286,9 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 	allocAddresses = append(allocAddresses, genesisAccount.Address) // Append genesis account address
 
 	shouldEnableFaucetString, err := app.InputConfig.Ask("Would you like to enable the SummerCash faucet?", &input.Options{
-		Default:  "true", // Set default
-		Required: true,   // Make required
+		Default:   "true", // Set default
+		Required:  true,   // Make required
+		HideOrder: true,   // Hide extra question
 	})
 
 	if shouldEnableFaucetString == "\r" { // Check no value specified
