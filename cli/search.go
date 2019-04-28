@@ -134,6 +134,14 @@ func (app *CLI) searchBlockmesh(c *cli.Context) error {
 
 		resultSelector = strings.Replace(resultSelector, "\r", "", 1) // Remove \r
 
+		switch resultSelector {
+		case "no":
+			return nil // Finished
+		case "yes":
+			print("Which result would you like to show?") // Print query
+			continue                                      // Continue
+		}
+
 		if !strings.Contains(resultSelector, "/") && !strings.Contains(resultSelector, ".") { // Check is not file selector
 			intVal, err := strconv.Atoi(resultSelector) // Parse
 
