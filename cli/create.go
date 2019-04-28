@@ -121,6 +121,28 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		} else if shouldContinue == "no" {
 			os.Exit(0) // Stop execution
 		}
+
+		d, err := os.Open(common.DataDir) // Open data dir
+
+		if err != nil { // Check for errors
+			return err // Return found error
+		}
+
+		defer d.Close() // Close dir
+
+		names, err := d.Readdirnames(-1) // Get directory files
+
+		if err != nil { // Check for errors
+			return err // Return found error
+		}
+
+		for _, name := range names { // Iterate through files
+			err = os.RemoveAll(filepath.Join(common.DataDir, name)) // Remove file
+
+			if err != nil { // Check for errors
+				return err // Return found error
+			}
+		}
 	}
 
 	summercashCommon.DataDir = common.DataDir // Set smc data dir
