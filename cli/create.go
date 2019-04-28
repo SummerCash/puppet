@@ -14,6 +14,7 @@ import (
 	"math/big"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	walletAccounts "github.com/SummerCash/summercash-wallet-server/accounts"
 
@@ -68,7 +69,7 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 	var err error // Init error buffer
 
 	if c.String("data-dir") == common.GetDefaultDataPath() { // Check data directory not specified
-		common.DataDir, err = app.InputConfig.Ask("Where would you like your new network to be stored?", &input.Options{
+		var dataDir, err = app.InputConfig.Ask("Where would you like your new network to be stored?", &input.Options{
 			Default:   common.GetDefaultDataPath(), // Set default
 			Required:  false,                       // Make optional
 			HideOrder: true,                        // Hide extra question
@@ -77,6 +78,12 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		if err != nil { // Check for errors
 			return err // Return found error
 		}
+
+		if dataDir == "\r" { // Check no value set
+			dataDir = common.DataDir // Set to default
+		}
+
+		common.DataDir = dataDir // Set data dir
 	}
 
 	summercashCommon.DataDir = common.DataDir // Set smc data dir
@@ -192,6 +199,12 @@ func (app *CLI) parseGenesisFile(genesisPath string) (*config.ChainConfig, error
 			HideOrder: true,  // Hide extra question
 		})
 
+		if networkIDString == "\r" { // Check no ID
+			networkIDString = "1" // Set to default ID
+		}
+
+		networkIDString = strings.Replace(networkIDString, "\r", "", 1) // Remove \r
+
 		networkIDInt, err := strconv.Atoi(networkIDString) // Parse network ID
 
 		if err != nil { // Check for errors
@@ -255,7 +268,13 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 		HideOrder: true,       // Hide extra question
 	})
 
-	totalIssuanceBigVal, _, _ := big.ParseFloat(totalIssuanceString, 64, 18, big.ToNearestEven) // Parse total issuance
+	if totalIssuanceString == "\r" { // Check no value specified
+		totalIssuanceString = "21000000" // Set default
+	}
+
+	totalIssuanceString = strings.Replace(totalIssuanceString, "\r", "", 1) // Remove \r
+
+	totalIssuanceBigVal, _, _ := big.ParseFloat(totalIssuanceString, 10, 18, big.ToNearestEven) // Parse total issuance
 
 	genesisAccount, err := newAccount(networkID) // Initialize genesis account
 
@@ -270,6 +289,12 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 		Default:  "true", // Set default
 		Required: true,   // Make required
 	})
+
+	if shouldEnableFaucetString == "\r" { // Check no value specified
+		shouldEnableFaucetString = "true" // Set should not
+	}
+
+	shouldEnableFaucetString = strings.Replace(shouldEnableFaucetString, "\r", "", 1) // Remove \r
 
 	shouldEnableFaucet, err := strconv.ParseBool(shouldEnableFaucetString) // Parse should enable faucet
 
