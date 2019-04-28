@@ -74,6 +74,8 @@ func (app *CLI) SetupCreateCommand() {
 func (app *CLI) createNetwork(c *cli.Context) error {
 	var err error // Init error buffer
 
+	summercashCommon.Silent = true // Silence logsconfigPath
+
 	if c.String("data-dir") == common.GetDefaultDataPath() { // Check data directory not specified
 		var dataDir, err = app.InputConfig.Ask("Where would you like your new network to be stored?", &input.Options{
 			Default:   common.GetDefaultDataPath(), // Set default
@@ -110,12 +112,26 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		return err // Return found error
 	}
 
-	return constructNetwork(c, c.String("data-path")) // Construct network
+	err = constructNetwork(c, c.String("data-path")) // Construct network
+
+	if err != nil { // Check for errors
+		return err // Return found error
+	}
+
+	summercashCommon.Silent = false // Enable logs
+
+	return nil // No error occurred, return nil
 }
 
 // constructNetwork constructs a network, assuming all configs have been set.
 func constructNetwork(c *cli.Context, dataPath string) error {
-	config, err := readChainConfig(dataPath) // Read chain config
+	configPath := filepath.FromSlash(fmt.Sprintf("%s/config/config.json", dataPath)) // Get config path
+
+	if dataPath == "" { // Check no data path
+		configPath = filepath.FromSlash(fmt.Sprintf("%s/config/config.json", common.DataDir)) // Set cfg path
+	}
+
+	config, err := readChainConfig(configPath) // Read chain config
 
 	if err != nil { // Check for errors
 		return err // Return found error
@@ -125,7 +141,7 @@ func constructNetwork(c *cli.Context, dataPath string) error {
 
 	chain, err := types.NewChain(genesisAddress) // Initialize chain
 
-	if err != nil { // Check for errors
+	if err != nil && !strings.Contains(err.Error(), "chain already exists") { // Check for errors
 		return err // Return found error
 	}
 
@@ -242,6 +258,12 @@ func (app *CLI) parseGenesisFile(genesisPath string) (*config.ChainConfig, error
 			Required:  false, // Make required
 			HideOrder: true,  // Hide extra question
 		})
+
+		if inflationString == "\r" { // Check no value set
+			inflationString = "0.0" // Set inflation
+		}
+
+		inflationString = strings.Replace(inflationString, "\r", "", 1) // Remove \r
 
 		inflation, err = strconv.ParseFloat(inflationString, 64) // Parse float
 
