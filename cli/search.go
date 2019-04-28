@@ -142,15 +142,17 @@ func (app *CLI) searchBlockmesh(c *cli.Context) error {
 			}
 
 			fmt.Println(results[intVal]) // Log result
+			fmt.Println(files[intVal])   // Log filename
 		} else {
 			for i := 0; i < len(files); i++ { // Iterate through files
 				if files[i] == resultSelector { // Check is file
 					fmt.Println(results[i]) // Log result
+					fmt.Println(files[i])   // Log filename
 				}
 			}
 		}
 
-		print("Are there any other results you would like to look at?") // Log query
+		print("\nAre there any other results you would like to look at?") // Log query
 	}
 
 	return nil // No error occurred, return nil
@@ -255,11 +257,13 @@ func searchBlockmesh(searchChains []string, searchTerm string) ([]string, []stri
 		}
 
 		for _, transaction := range chain.Transactions { // Iterate through transactions
-			if transaction.Hash.String() == searchTerm || transaction.Sender.String() == searchTerm || transaction.Recipient.String() == searchTerm || bytes.Contains(transaction.Payload, []byte(searchTerm)) { // Check match
-				results = append(results, transaction.String())                                                                                   // Append transaction
-				resultFiles = append(resultFiles, filepath.FromSlash(fmt.Sprintf("%s/db/chain/chain_%s.json", common.DataDir, address.String()))) // Append result file
+			if transaction != nil && transaction.Hash != nil { // Check is transaction
+				if transaction.Hash.String() == searchTerm || (transaction.Sender != nil && transaction.Sender.String() == searchTerm) || (transaction.Recipient != nil && transaction.Recipient.String() == searchTerm) || bytes.Contains(transaction.Payload, []byte(searchTerm)) { // Check match
+					results = append(results, transaction.String())                                                                                   // Append transaction
+					resultFiles = append(resultFiles, filepath.FromSlash(fmt.Sprintf("%s/db/chain/chain_%s.json", common.DataDir, address.String()))) // Append result file
 
-				continue // Continue
+					continue // Continue
+				}
 			}
 		}
 	}
