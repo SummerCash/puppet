@@ -2,14 +2,17 @@
 package main
 
 import (
-	"github.com/urfave/cli"
-	"os"
 	"log"
+	"os"
+
+	"github.com/SummerCash/puppet/cli"
 )
 
 // main is the puppet entry function.
 func main() {
-	err := cli.NewApp().Run(os.Args) // Initialize CLI app
+	app := cli.NewCLIApp() // Initialize CLI app
+
+	err := app.Run(os.Args) // Initialize CLI app
 
 	if err != nil { // Check for errors
 		log.Fatal(err) // Panic
