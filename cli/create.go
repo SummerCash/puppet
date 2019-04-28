@@ -169,7 +169,7 @@ func (app *CLI) createNetwork(c *cli.Context) error {
 		return err // Return found error
 	}
 
-	color.Green(fmt.Sprintf("\nYou're all good to go! %s Your new SummerCash network has been created in %s. Try running go-summercash to get started.", emoji.Sprint(":clap:"), common.DataDir)) // Log success
+	color.Green(fmt.Sprintf("\nYou're all good to go! %s Your new SummerCash network has been created in %s. Try running go-summercash --network puppet_%d to get started.", emoji.Sprint(":clap:"), common.DataDir, config.NetworkID)) // Log success
 
 	summercashCommon.Silent = false // Enable logs
 
