@@ -10,5 +10,6 @@ require (
 	github.com/gernest/wow v0.1.0
 	github.com/kyokomi/emoji v2.1.0+incompatible
 	github.com/tcnksm/go-input v0.0.0-20180404061846-548a7d7a8ee8
+	github.com/tockins/interact v0.0.0-20171114182912-f8fb5795b5d7
 	github.com/urfave/cli v1.20.0
 )

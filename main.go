@@ -13,6 +13,7 @@ func main() {
 	app := cli.NewCLI() // Initialize CLI app
 
 	app.SetupCreateCommand() // Setup create command
+	app.SetupSearchCommand() // Setup search command
 
 	err := app.App.Run(os.Args) // Initialize CLI app
 
