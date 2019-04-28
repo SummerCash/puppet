@@ -2,15 +2,24 @@
 package cli
 
 import (
-	"github.com/SummerCash/puppet/common"
-	"github.com/urfave/cli"
+	"bytes"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 
+	"github.com/fatih/color"
+	"github.com/gernest/wow"
+	"github.com/gernest/wow/spin"
+	"github.com/kyokomi/emoji"
 	"github.com/tcnksm/go-input"
-
 	i "github.com/tockins/interact"
+	"github.com/urfave/cli"
 
 	summercashCommon "github.com/SummerCash/go-summercash/common"
+	"github.com/SummerCash/go-summercash/types"
+	"github.com/SummerCash/puppet/common"
 )
 
 /* BEGIN EXPORTED METHODS */
@@ -48,6 +57,8 @@ func (app *CLI) SetupSearchCommand() {
 // searchBlockmesh handles the search command.
 func (app *CLI) searchBlockmesh(c *cli.Context) error {
 	summercashCommon.Silent = true // Silence logsconfigPath
+
+	summercashCommon.DataDir = common.DataDir // Set smc data dir
 
 	var err error // Init error buffer
 
@@ -88,6 +99,58 @@ func (app *CLI) searchBlockmesh(c *cli.Context) error {
 		if err != nil { // Check for errors
 			return err // Return found error
 		}
+	}
+
+	results, files, err := searchBlockmesh(searchChains, searchTerm) // Search
+
+	if err != nil { // Check for errors
+		return err // Return found error
+	}
+
+	if len(results) == 0 { // Check no results
+		color.Red(fmt.Sprintf("No results were found in any of %d files matching your query for %s.", len(files), searchTerm)) // Log error
+
+		return nil // No error occurred, return nil
+	}
+
+	green := color.New(color.FgGreen).PrintfFunc() // Init green
+
+	green("All done! Found %d results in %d files matching your query for %s. Which result would you like to show?", len(results), len(files), searchTerm) // Print
+
+	for {
+		resultSelector, err := app.InputConfig.Ask("", &input.Options{
+			Required:    true, // Make required
+			HideOrder:   true, // Hide extra question
+			HideDefault: true, // Hide default
+		})
+
+		if err != nil { // Check for errors
+			break // Break
+		}
+
+		if resultSelector == "" || resultSelector == "\r" { // Check no value
+			return nil // No error occurred, return nil
+		}
+
+		resultSelector = strings.Replace(resultSelector, "\r", "", 1) // Remove \r
+
+		if !strings.Contains(resultSelector, "/") && !strings.Contains(resultSelector, ".") { // Check is not file selector
+			intVal, err := strconv.Atoi(resultSelector) // Parse
+
+			if err != nil { // Check for errors
+				return err // Return found error
+			}
+
+			fmt.Println(results[intVal]) // Log result
+		} else {
+			for i := 0; i < len(files); i++ { // Iterate through files
+				if files[i] == resultSelector { // Check is file
+					fmt.Println(results[i]) // Log result
+				}
+			}
+		}
+
+		print("Are there any other results you would like to look at?") // Log query
 	}
 
 	return nil // No error occurred, return nil
@@ -145,6 +208,63 @@ func (app *CLI) requestSearchChains(c *cli.Context) ([]string, error) {
 	}
 
 	return searchChains, nil // Return search chains
+}
+
+// searchBlockmesh searches the blockmesh for a particular string.
+// If the search term is found, the particular resources in which it is contained are returned as JSON string values,
+// followed by their file names.
+func searchBlockmesh(searchChains []string, searchTerm string) ([]string, []string, error) {
+	w := wow.New(os.Stdout, spin.Get(spin.Dots), emoji.Sprintf(":mag: Searching the blockmesh...")) // Init logger
+
+	w.Start() // Start spinner
+
+	defer w.Stop() // Stop spinner
+
+	localSearchChains := searchChains // Init local search chains buffer
+
+	var results []string     // Init search results buffer
+	var resultFiles []string // Init result files buffer
+	var err error            // Init error buffer
+
+	if len(searchChains) == 0 { // Check no search chains
+		localSearchChains, err = types.GetAllLocalizedChains() // Get all local chains
+
+		if err != nil { // Check for errors
+			return []string{}, []string{}, err // Return found error
+		}
+	}
+
+	for _, chainName := range localSearchChains { // Iterate through search chains
+		address, err := summercashCommon.StringToAddress(chainName) // Parse string addr
+
+		if err != nil { // Check for errors
+			return []string{}, []string{}, err // Return found error
+		}
+
+		chain, err := types.ReadChainFromMemory(address) // Read chain
+
+		if err != nil { // Check for errors
+			return []string{}, []string{}, err // Return found error
+		}
+
+		if chainName == searchTerm { // Check direct match
+			results = append(results, chain.String())                                                                                         // Append chain string
+			resultFiles = append(resultFiles, filepath.FromSlash(fmt.Sprintf("%s/db/chain/chain_%s.json", common.DataDir, address.String()))) // Append result file
+
+			continue // Continue
+		}
+
+		for _, transaction := range chain.Transactions { // Iterate through transactions
+			if transaction.Hash.String() == searchTerm || transaction.Sender.String() == searchTerm || transaction.Recipient.String() == searchTerm || bytes.Contains(transaction.Payload, []byte(searchTerm)) { // Check match
+				results = append(results, transaction.String())                                                                                   // Append transaction
+				resultFiles = append(resultFiles, filepath.FromSlash(fmt.Sprintf("%s/db/chain/chain_%s.json", common.DataDir, address.String()))) // Append result file
+
+				continue // Continue
+			}
+		}
+	}
+
+	return results, resultFiles, nil // Return results
 }
 
 /* BEGIN INTERNAL METHODS */
