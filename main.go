@@ -12,8 +12,9 @@ import (
 func main() {
 	app := cli.NewCLI() // Initialize CLI app
 
-	app.SetupCreateCommand() // Setup create command
-	app.SetupSearchCommand() // Setup search command
+	app.SetupCreateCommand()   // Setup create command
+	app.SetupSearchCommand()   // Setup search command
+	app.SetupHardforkCommand() // Setup hardfork command
 
 	err := app.App.Run(os.Args) // Initialize CLI app
 
