@@ -19,7 +19,11 @@ var (
 
 // GetDefaultDataPath gets the default data directory.
 func GetDefaultDataPath() string {
-	path, _ := filepath.Abs(filepath.FromSlash("./data")) // Get data path
+	path, err := filepath.Abs(filepath.FromSlash("./data")) // Get data path
+
+	if err != nil { // Check for errors
+		panic(err) // Panic
+	}
 
 	if !strings.Contains(path, "puppet") { // Check not in puppet dir
 		user, err := user.Current() // Get current user
