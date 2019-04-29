@@ -23,7 +23,7 @@ func NewCLI() *CLI {
 
 	app.Name = "puppet"                                                                   // Set name
 	app.Usage = "a visual CLI for managing, creating, and analyzing SummerCash networks." // Set description
-	app.Version = "v0.1.1"                                                                // Set version
+	app.Version = "v0.1.2"                                                                // Set version
 	app.EnableBashCompletion = true                                                       // Enable auto-completion
 
 	app.Flags = []cli.Flag{
