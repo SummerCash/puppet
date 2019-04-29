@@ -11,8 +11,8 @@ github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWX
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=
 github.com/SummerCash/go-summercash v0.6.3 h1:gRNxZWQo0LP6FWEEyA6G18X2tqtVLPsbb/Tqv/Tx6eM=
 github.com/SummerCash/go-summercash v0.6.3/go.mod h1:AYBrhXUamq5du35Bvxw4dyOECCoqS+zIHuXNmNXaTgo=
-github.com/SummerCash/go-summercash v0.6.7 h1:Qq7WFbiWH3bM5oZWOS+1adrsDTXJSmTzwOhzl1AdT3E=
-github.com/SummerCash/go-summercash v0.6.7/go.mod h1:AYBrhXUamq5du35Bvxw4dyOECCoqS+zIHuXNmNXaTgo=
+github.com/SummerCash/go-summercash v0.6.8 h1:tATpTnKSp9fMSztkYi0Ex77+XE0f5pPL9jWBcYhD2kk=
+github.com/SummerCash/go-summercash v0.6.8/go.mod h1:AYBrhXUamq5du35Bvxw4dyOECCoqS+zIHuXNmNXaTgo=
 github.com/SummerCash/summercash-wallet-server v0.5.8 h1:bvApgfsFDM5Y51/ucOWg4WDwYBLdLnkNr37uFe59V+w=
 github.com/SummerCash/summercash-wallet-server v0.5.8/go.mod h1:yEV/uhzwgiYuGZn7rhDtpnKr8CZ9rrQEi6+xVPVwEt0=
 github.com/SummerCash/ursa v0.0.0-20190308180320-f0a1fc97afcf h1:bj9I0RCoGn83J6E7JMyb2jiWuI8QBMVoz6Ay3qA6FXE=

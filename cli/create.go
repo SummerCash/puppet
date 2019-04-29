@@ -16,26 +16,22 @@ import (
 	"strings"
 	"time"
 
-	"github.com/SummerCash/puppet/common"
+	"github.com/boltdb/bolt"
+	"github.com/fatih/color"
+	"github.com/gernest/wow"
+	"github.com/gernest/wow/spin"
+	"github.com/kyokomi/emoji"
 	"github.com/tcnksm/go-input"
 	"github.com/urfave/cli"
-
-	"github.com/boltdb/bolt"
-
-	walletAccounts "github.com/SummerCash/summercash-wallet-server/accounts"
-	walletCrypto "github.com/SummerCash/summercash-wallet-server/crypto"
 
 	"github.com/SummerCash/go-summercash/accounts"
 	summercashCommon "github.com/SummerCash/go-summercash/common"
 	"github.com/SummerCash/go-summercash/config"
 	"github.com/SummerCash/go-summercash/crypto"
 	"github.com/SummerCash/go-summercash/types"
-
-	"github.com/gernest/wow"
-	"github.com/gernest/wow/spin"
-
-	"github.com/fatih/color"
-	"github.com/kyokomi/emoji"
+	"github.com/SummerCash/puppet/common"
+	walletAccounts "github.com/SummerCash/summercash-wallet-server/accounts"
+	walletCrypto "github.com/SummerCash/summercash-wallet-server/crypto"
 )
 
 /* BEGIN EXPORTED METHODS */
@@ -464,6 +460,10 @@ func (app *CLI) requestAlloc(networkID uint) (map[string]*big.Float, []summercas
 			Required:  true, // Make required
 			HideOrder: true, // Hide extra question
 		})
+
+		if err != nil { // Check for errors
+			return nil, []summercashCommon.Address{}, err // Return found error
+		}
 
 		additionalBalanceBigVal, _, _ := big.ParseFloat(additionalBalance, 10, 18, big.ToNearestEven) // Parse balance string val
 
