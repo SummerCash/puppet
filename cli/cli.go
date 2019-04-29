@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/urfave/cli"
-
 	"github.com/tcnksm/go-input"
 )
 
@@ -23,7 +22,7 @@ func NewCLI() *CLI {
 
 	app.Name = "puppet"                                                                   // Set name
 	app.Usage = "a visual CLI for managing, creating, and analyzing SummerCash networks." // Set description
-	app.Version = "v0.1.2"                                                                // Set version
+	app.Version = "v0.1.3"                                                                // Set version
 	app.EnableBashCompletion = true                                                       // Enable auto-completion
 
 	app.Flags = []cli.Flag{
