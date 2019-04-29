@@ -266,7 +266,7 @@ func searchBlockmesh(searchChains []string, searchTerm string) ([]string, []stri
 
 		for _, transaction := range chain.Transactions { // Iterate through transactions
 			if transaction != nil && transaction.Hash != nil { // Check is transaction
-				if transaction.Hash.String() == searchTerm || (transaction.Sender != nil && transaction.Sender.String() == searchTerm) || (transaction.Recipient != nil && transaction.Recipient.String() == searchTerm) || bytes.Contains(transaction.Payload, []byte(searchTerm)) { // Check match
+				if transaction.Hash.String() == searchTerm || (transaction.Sender != nil && transaction.Sender.String() == searchTerm) || (transaction.Recipient != nil && transaction.Recipient.String() == searchTerm) || bytes.Contains(transaction.Payload, []byte(searchTerm)) || (transaction.Amount != nil && strings.Contains(transaction.Amount.String(), searchTerm)) { // Check match
 					results = append(results, transaction.String())                                                                                   // Append transaction
 					resultFiles = append(resultFiles, filepath.FromSlash(fmt.Sprintf("%s/db/chain/chain_%s.json", common.DataDir, address.String()))) // Append result file
 
