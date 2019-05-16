@@ -3,7 +3,7 @@ module github.com/SummerCash/puppet
 go 1.12
 
 require (
-	github.com/SummerCash/go-summercash v0.6.9
+	github.com/SummerCash/go-summercash v0.6.93
 	github.com/SummerCash/summercash-wallet-server v0.5.8
 	github.com/boltdb/bolt v1.3.1
 	github.com/fatih/color v1.7.0
