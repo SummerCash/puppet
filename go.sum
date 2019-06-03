@@ -11,6 +11,8 @@ github.com/NebulousLabs/go-upnp v0.0.0-20181203152547-b32978b8ccbf h1:1UP+tqdgLA
 github.com/NebulousLabs/go-upnp v0.0.0-20181203152547-b32978b8ccbf/go.mod h1:GbuBk21JqF+driLX3XtJYNZjGa45YDoa9IqCTzNSfEc=
 github.com/SummerCash/go-summercash v0.6.96 h1:DyAc6YpnXqxq2V0VNLwbDwuEUHOy4sZIXDnGI7Q+3CE=
 github.com/SummerCash/go-summercash v0.6.96/go.mod h1:PofhjEyoOCzXAeBGfxETVpqkXn8K/dHaWvyPTfa4Bo0=
+github.com/SummerCash/go-summercash v0.6.98 h1:3QLwEk3HsyOOGI5exjl373WgGZRjMk7KxCp/lI2mYUY=
+github.com/SummerCash/go-summercash v0.6.98/go.mod h1:PofhjEyoOCzXAeBGfxETVpqkXn8K/dHaWvyPTfa4Bo0=
 github.com/SummerCash/summercash-wallet-server v0.6.1 h1:iq3gJM/MGtzW+ATRq/H+CV84glsLktLgNiny70YS5tY=
 github.com/SummerCash/summercash-wallet-server v0.6.1/go.mod h1:boIO8Dbu5wmlUn2K43MoCM2V11wwR/WT8N0FgvuBJVQ=
 github.com/SummerCash/ursa v0.0.0-20190308180320-f0a1fc97afcf h1:bj9I0RCoGn83J6E7JMyb2jiWuI8QBMVoz6Ay3qA6FXE=
@@ -128,6 +130,8 @@ github.com/klauspost/compress v1.4.0 h1:8nsMz3tWa9SWWPL60G1V6CUsf4lLjWLTNEtibhe8
 github.com/klauspost/compress v1.4.0/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
 github.com/klauspost/compress v1.5.0 h1:iDac0ZKbmSA4PRrRuXXjZL8C7UoJan8oBYxXkMzEQrI=
 github.com/klauspost/compress v1.5.0/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
+github.com/klauspost/compress v1.6.0 h1:q8krKzVy+5eUHmAilG6cIyipk8+/hWJcJlvmudrGQB0=
+github.com/klauspost/compress v1.6.0/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
 github.com/klauspost/cpuid v0.0.0-20180405133222-e7e905edc00e h1:+lIPJOWl+jSiJOc70QXJ07+2eg2Jy2EC7Mi11BWujeM=
 github.com/klauspost/cpuid v0.0.0-20180405133222-e7e905edc00e/go.mod h1:Pj4uuM528wm8OyEC2QMXAi2YiTZ96dNQPGgoMS4s3ek=
 github.com/klauspost/cpuid v1.2.1 h1:vJi+O/nMdFt0vqm8NZBI6wzALWdA2X+egi0ogNyrC/w=
@@ -342,6 +346,8 @@ golang.org/x/sys v0.0.0-20190502145724-3ef323f4f1fd/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190529164535-6a60838ec259/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190531073156-46560c3f3c0a h1:ndj5BW7+tkr8XVsbkZpft/pgCRU+L76ePImF2dpCwek=
 golang.org/x/sys v0.0.0-20190531073156-46560c3f3c0a/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190602015325-4c4f7f33c9ed h1:uPxWBzB3+mlnjy9W58qY1j/cjyFjutgw/Vhan2zLy/A=
+golang.org/x/sys v0.0.0-20190602015325-4c4f7f33c9ed/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
