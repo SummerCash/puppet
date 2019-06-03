@@ -11,8 +11,8 @@ github.com/NebulousLabs/go-upnp v0.0.0-20181203152547-b32978b8ccbf h1:1UP+tqdgLA
 github.com/NebulousLabs/go-upnp v0.0.0-20181203152547-b32978b8ccbf/go.mod h1:GbuBk21JqF+driLX3XtJYNZjGa45YDoa9IqCTzNSfEc=
 github.com/SummerCash/go-summercash v0.6.96 h1:DyAc6YpnXqxq2V0VNLwbDwuEUHOy4sZIXDnGI7Q+3CE=
 github.com/SummerCash/go-summercash v0.6.96/go.mod h1:PofhjEyoOCzXAeBGfxETVpqkXn8K/dHaWvyPTfa4Bo0=
-github.com/SummerCash/go-summercash v0.6.98 h1:3QLwEk3HsyOOGI5exjl373WgGZRjMk7KxCp/lI2mYUY=
-github.com/SummerCash/go-summercash v0.6.98/go.mod h1:PofhjEyoOCzXAeBGfxETVpqkXn8K/dHaWvyPTfa4Bo0=
+github.com/SummerCash/go-summercash v0.6.99 h1:+5hJZmNC+srXvE6Ajd3h0bR10HzZbthRQUVE1JDQpQs=
+github.com/SummerCash/go-summercash v0.6.99/go.mod h1:PofhjEyoOCzXAeBGfxETVpqkXn8K/dHaWvyPTfa4Bo0=
 github.com/SummerCash/summercash-wallet-server v0.6.1 h1:iq3gJM/MGtzW+ATRq/H+CV84glsLktLgNiny70YS5tY=
 github.com/SummerCash/summercash-wallet-server v0.6.1/go.mod h1:boIO8Dbu5wmlUn2K43MoCM2V11wwR/WT8N0FgvuBJVQ=
 github.com/SummerCash/ursa v0.0.0-20190308180320-f0a1fc97afcf h1:bj9I0RCoGn83J6E7JMyb2jiWuI8QBMVoz6Ay3qA6FXE=
@@ -326,6 +326,8 @@ golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/net v0.0.0-20190501004415-9ce7a6920f09/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/net v0.0.0-20190522155817-f3200d17e092/go.mod h1:HSz+uSET+XFnRR8LxR5pz3Of3rY3CfYBVs4xY44aLks=
+golang.org/x/net v0.0.0-20190603091049-60506f45cf65 h1:+rhAzEzT3f4JtomfC371qB+0Ola2caSKcY69NUBZrRQ=
+golang.org/x/net v0.0.0-20190603091049-60506f45cf65/go.mod h1:HSz+uSET+XFnRR8LxR5pz3Of3rY3CfYBVs4xY44aLks=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
 golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20190523182746-aaccbc9213b0/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
